@@ -2,6 +2,10 @@
     <string name="app_name">Github User App</string>
     <string name="username">Username</string>
     <string name="search_hint">Search User Github</string>
-    <string name="followers">100 Followers</string>
-    <string name="following">50 Followers</string>
+    <string name="followers">0 Followers</string>
+    <string name="following">0 Followers</string>
+    <string name="tab_1">Followers</string>
+    <string name="tab_2">Following</string>
+    <string name="name">Name</string>
+    <string name="share">Share</string>
 </resources>

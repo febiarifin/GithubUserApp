@@ -1,10 +1,9 @@
-package com.febiarifin.githubuserapp
+package com.febiarifin.githubuserapp.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.febiarifin.githubuserapp.databinding.ItemUserBinding
 import com.febiarifin.githubuserapp.model.User
 
@@ -33,8 +32,6 @@ class GithubUserAdapter: RecyclerView.Adapter<GithubUserAdapter.UserViewHolder>(
             binding.apply {
                 Glide.with(itemView)
                     .load(user.avatar_url)
-                    .transition(DrawableTransitionOptions.withCrossFade())
-                    .centerCrop()
                     .into(ivProfile)
                 tvUsername.text = user.login
             }

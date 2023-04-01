@@ -1,7 +1,8 @@
-package com.febiarifin.githubuserapp
+package com.febiarifin.githubuserapp.ui.main
 
 import android.app.SearchManager
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -10,7 +11,11 @@ import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.febiarifin.githubuserapp.ui.detail.DetailUserActivity
+import com.febiarifin.githubuserapp.R
 import com.febiarifin.githubuserapp.databinding.ActivityMainBinding
+import com.febiarifin.githubuserapp.model.User
+import com.febiarifin.githubuserapp.ui.GithubUserAdapter
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,7 +34,18 @@ class MainActivity : AppCompatActivity() {
 
         adapter = GithubUserAdapter()
         adapter.notifyDataSetChanged()
-        viewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(MainViewModel::class.java)
+        viewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(
+            MainViewModel::class.java)
+
+        adapter.setOnItemClickCallback(object : GithubUserAdapter.OnItemClickCallback{
+            override fun onItemClicked(data: User) {
+                Intent(this@MainActivity, DetailUserActivity::class.java).also {
+                    it.putExtra(DetailUserActivity.EXTRA_USERNAME, data.login)
+                    startActivity(it)
+                }
+            }
+
+        })
 
         binding.apply {
             rvGithubUser.layoutManager = LinearLayoutManager(this@MainActivity)
@@ -62,7 +78,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
-        inflater.inflate(R.menu.option_menu, menu)
+        inflater.inflate(R.menu.menu_main, menu)
 
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         val searchView = menu.findItem(R.id.search).actionView as SearchView

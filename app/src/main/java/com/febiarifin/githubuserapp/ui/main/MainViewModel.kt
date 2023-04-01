@@ -1,4 +1,4 @@
-package com.febiarifin.githubuserapp
+package com.febiarifin.githubuserapp.ui.main
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -45,7 +45,7 @@ class MainViewModel: ViewModel() {
                 if (response != null){
                     listUsers.postValue(response.body()?.items)
                 }
-                if(response.body()?.totalCount == null){
+                if(response.body()?.totalCount == 0){
                     _message.value = "User Not Found"
                 }
             }
