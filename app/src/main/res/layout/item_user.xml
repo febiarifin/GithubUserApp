@@ -7,7 +7,6 @@
     android:id="@+id/cv_user"
     android:layout_margin="6dp"
     app:cardCornerRadius="4dp"
-    app:cardBackgroundColor="@color/my_color_dark_100"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground">
@@ -31,8 +30,7 @@
             android:gravity="center_vertical"
             android:layout_marginStart="16dp"
             android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@color/white"/>
+            android:textStyle="bold"/>
 
     </LinearLayout>
 
