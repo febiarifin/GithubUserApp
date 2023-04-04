@@ -9,7 +9,11 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.febiarifin.githubuserapp.R
@@ -19,6 +23,11 @@ import com.febiarifin.githubuserapp.ui.GithubUserAdapter
 import com.febiarifin.githubuserapp.ui.detail.DetailUserActivity
 import com.febiarifin.githubuserapp.ui.favorite.FavoriteUserActivity
 import com.febiarifin.githubuserapp.ui.setting.SettingActivity
+import com.febiarifin.githubuserapp.ui.setting.SettingPreferences
+import com.febiarifin.githubuserapp.ui.setting.SettingViewModel
+import com.febiarifin.githubuserapp.ui.setting.ViewModelFactory
+
+private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 class MainActivity : AppCompatActivity() {
 
@@ -75,6 +84,19 @@ class MainActivity : AppCompatActivity() {
         viewModel.message.observe(this,{
             Toast.makeText(this , it, Toast.LENGTH_SHORT).show()
         })
+
+        val pref = SettingPreferences.getInstance(dataStore)
+        val settingViewModel = ViewModelProvider(this, ViewModelFactory(pref)).get(
+            SettingViewModel::class.java
+        )
+
+        settingViewModel.getThemeSettings().observe(this) { isDarkModeActive: Boolean ->
+            if (isDarkModeActive) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
+        }
     }
 
     private fun showLoading(isLoading: Boolean) = if (isLoading) binding.progressbar.visibility = View.VISIBLE else binding.progressbar.visibility = View.GONE

@@ -1,9 +1,9 @@
 package com.febiarifin.githubuserapp.ui.setting
 
 import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.CompoundButton
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -34,6 +34,7 @@ class SettingActivity : AppCompatActivity() {
         val settingViewModel = ViewModelProvider(this, ViewModelFactory(pref)).get(
             SettingViewModel::class.java
         )
+
         settingViewModel.getThemeSettings().observe(this) { isDarkModeActive: Boolean ->
             if (isDarkModeActive) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
