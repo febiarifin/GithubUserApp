@@ -3,19 +3,22 @@ package com.febiarifin.githubuserapp.ui.main
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.febiarifin.githubuserapp.ui.detail.DetailUserActivity
 import com.febiarifin.githubuserapp.R
 import com.febiarifin.githubuserapp.databinding.ActivityMainBinding
 import com.febiarifin.githubuserapp.model.User
 import com.febiarifin.githubuserapp.ui.GithubUserAdapter
+import com.febiarifin.githubuserapp.ui.detail.DetailUserActivity
+import com.febiarifin.githubuserapp.ui.favorite.FavoriteUserActivity
+import com.febiarifin.githubuserapp.ui.setting.SettingActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -98,5 +101,19 @@ class MainActivity : AppCompatActivity() {
             }
         })
         return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+           R.id.favorite -> {
+               val favoriteIntent =  Intent(this@MainActivity, FavoriteUserActivity::class.java)
+               startActivity(favoriteIntent)
+           }
+            R.id.setting -> {
+                val settingIntent =  Intent(this@MainActivity, SettingActivity::class.java)
+                startActivity(settingIntent)
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

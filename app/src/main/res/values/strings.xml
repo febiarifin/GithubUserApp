@@ -8,4 +8,8 @@
     <string name="tab_2">Following</string>
     <string name="name">Name</string>
     <string name="share">Share</string>
+    <string name="favorite">Favorite User</string>
+    <string name="is_favorite">Favorite User</string>
+    <string name="setting">Setting</string>
+    <string name="dark_mode">Dark Mode</string>
 </resources>

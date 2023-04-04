@@ -7,26 +7,38 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.febiarifin.githubuserapp.R
+import com.febiarifin.githubuserapp.database.AppDatabase
+import com.febiarifin.githubuserapp.database.FavoriteUser
 import com.febiarifin.githubuserapp.databinding.ActivityDetailUserBinding
 
 class DetailUserActivity : AppCompatActivity() {
 
     companion object{
         const val EXTRA_USERNAME = "extra_username"
+        const val MESSAGE_SUCCES_ADD_TO_FAVORITE = "Ditambahkan ke favorit"
+        const val MESSAGE_SUCCES_REMOVE_TO_FAVORITE = "Dihapus dari favorit"
+        const val TYPE_ADD_TO_FAVORITE = "type_add_to_favorite"
+        const val TYPE_REMOVE_FROM_FAVORITE = "type_remove_from_favorite"
     }
 
     private lateinit var binding: ActivityDetailUserBinding
     private lateinit var viewModel: DetailUserViewModel
+    private lateinit var database: AppDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailUserBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        database = AppDatabase.getInstance(applicationContext)
+
         val username = intent.getStringExtra(EXTRA_USERNAME)
+        var avatar_url: String? = null
+
         val bundle = Bundle()
         bundle.putString(EXTRA_USERNAME, username)
 
@@ -44,11 +56,16 @@ class DetailUserActivity : AppCompatActivity() {
                         .load(it.avatar_url)
                         .into(ivProfile)
                 }
+                avatar_url = it.avatar_url
             }
         })
 
         viewModel.isLoading.observe(this, {
             showLoading(it)
+        })
+
+        viewModel.message.observe(this, {
+            Toast.makeText(this , it, Toast.LENGTH_SHORT).show()
         })
 
         val sectionPagerAdapter = SectionPagerAdapter(this,  supportFragmentManager, bundle)
@@ -61,10 +78,46 @@ class DetailUserActivity : AppCompatActivity() {
         actionBar!!.title = "Detail User"
         actionBar.setDisplayHomeAsUpEnabled(true)
 
-        if(isUsingNightModeResources() == false){
+        if(!isUsingNightModeResources()){
             binding.apply {
                 tvFollowers.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_baseline_people_alt_24_dark, 0, 0, 0)
                 tvFollowing.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_baseline_people_alt_24_dark, 0, 0, 0)
+            }
+        }
+
+        val favoriteUser = database.favoriteUserDao().findByUsername(username.toString())
+        if (favoriteUser == null) {
+            showFavoriteOrClear(TYPE_ADD_TO_FAVORITE)
+            binding.tvIsFavorite.visibility = View.GONE
+            binding.btnFavorite.setOnClickListener {
+                database.favoriteUserDao().insert(
+                    FavoriteUser(null, username, avatar_url)
+                )
+                showMessage(username+ " " + MESSAGE_SUCCES_ADD_TO_FAVORITE)
+                reloadActivity()
+            }
+        }else{
+            showFavoriteOrClear(TYPE_REMOVE_FROM_FAVORITE)
+            binding.tvIsFavorite.visibility = View.VISIBLE
+            binding.btnRemoveFavorite.setOnClickListener {
+               database.favoriteUserDao().delete(favoriteUser)
+               reloadActivity()
+               showMessage(username+ " " + MESSAGE_SUCCES_REMOVE_TO_FAVORITE)
+                reloadActivity()
+           }
+        }
+    }
+
+    private fun showFavoriteOrClear(type: String){
+        if (type == TYPE_ADD_TO_FAVORITE){
+            binding.apply {
+                btnFavorite.visibility = View.VISIBLE
+                btnRemoveFavorite.visibility = View.GONE
+            }
+        }else if(type == TYPE_REMOVE_FROM_FAVORITE){
+            binding.apply {
+                btnRemoveFavorite.visibility = View.VISIBLE
+                btnFavorite.visibility = View.GONE
             }
         }
     }
@@ -107,4 +160,13 @@ class DetailUserActivity : AppCompatActivity() {
     }
 
     private fun showLoading(isLoading: Boolean) = if (isLoading) binding.progressbar.visibility = View.VISIBLE else binding.progressbar.visibility = View.GONE
+
+    private fun reloadActivity(){
+        finish();
+        startActivity(getIntent());
+    }
+
+    private fun showMessage(message: String){
+        Toast.makeText(this, message,Toast.LENGTH_SHORT).show()
+    }
 }

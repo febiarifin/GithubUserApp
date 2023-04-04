@@ -13,4 +13,5 @@
     <color name="my_color_dark_200">#2d2d30</color>
     <color name="my_color_dark_100">#3e3e42</color>
     <color name="my_color_blue">#007acc</color>
+    <color name="my_color_red">#FF4343</color>
 </resources>

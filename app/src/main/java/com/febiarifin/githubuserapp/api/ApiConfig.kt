@@ -1,17 +1,20 @@
 package com.febiarifin.githubuserapp.api
 
+import com.febiarifin.githubuserapp.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class ApiConfig {
+
     companion object{
+        val token = "token " + BuildConfig.API_KEY
         fun getApiService(): ApiService {
             val authInterceptor = Interceptor{chain ->
                 val req = chain.request()
                 val requestHeader = req.newBuilder()
-                    .addHeader("Authorization", "token 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")
+                    .addHeader("Authorization", token)
                     .build()
                 chain.proceed(requestHeader)
             }
